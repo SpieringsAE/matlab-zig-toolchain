@@ -35,7 +35,7 @@ function tc = zig_tc
 	
 	tool.setDirective(      'IncludeSearchPath',    '-I');
 	tool.setDirective(      'PreprocessorDefine',   '-D');
-	tool.setDirective(      'OutputFlag',           '-Fo');
+	tool.setDirective(      'OutputFlag',           '-o');
 	tool.setDirective(      'Debug',                '-Zi');
 	
 	tool.setFileExtension(  'Source',               '.c');
@@ -56,7 +56,7 @@ function tc = zig_tc
 	
 	tool.setDirective(      'IncludeSearchPath',  	'-I');
 	tool.setDirective(      'PreprocessorDefine', 	'-D');
-	tool.setDirective(      'OutputFlag',           '-Fo');
+	tool.setDirective(      'OutputFlag',           '-o');
 	tool.setDirective(      'Debug',                '-Zi');
 	
 	tool.setFileExtension(  'Source',               '.cpp');
@@ -72,11 +72,11 @@ function tc = zig_tc
 	tool = tc.getBuildTool('Linker');
 	
 	tool.setName(           'Zig C/C++ Linker');
-	tool.setCommand(        'zig ld.lld');
+	tool.setCommand(        'zig cc');
 	tool.setPath(           '');
 	
-	tool.setDirective(      'Library',              '-L');
-	tool.setDirective(      'LibrarySearchPath',    '-I');
+	tool.setDirective(      'Library',              '-l');
+	tool.setDirective(      'LibrarySearchPath',    '-L');
 	tool.setDirective(      'OutputFlag',           '-out:');
 	tool.setDirective(      'Debug',                '');
 	
@@ -92,11 +92,11 @@ function tc = zig_tc
 	tool = tc.getBuildTool('C++ Linker');
 	
 	tool.setName(           'Zig C/C++ Linker');
-	tool.setCommand(        'zig ld.lld');
+	tool.setCommand(        'zig cc');
 	tool.setPath(           '');
 	
-	tool.setDirective(      'Library',              '-L');
-	tool.setDirective(      'LibrarySearchPath',    '-I');
+	tool.setDirective(      'Library',              '-l');
+	tool.setDirective(      'LibrarySearchPath',    '-L');
 	tool.setDirective(      'OutputFlag',           '-out:');
 	tool.setDirective(      'Debug',                '');
 	
