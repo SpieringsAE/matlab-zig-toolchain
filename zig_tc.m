@@ -4,9 +4,9 @@ function tc = zig_tc
 
 	% Copyright 2012-2016 The MathWorks, Inc.
 
-	tc = coder.make.ToolchainInfo('BuildArtifact', 'zig');
+	tc = coder.make.ToolchainInfo('BuildArtifact', 'gmake makefile');
 	tc.Name             = 'zig 0.11.0 | zig';
-	tc.Platform         = 'win64';
+	tc.Platform         = 'glnxa64';
 	tc.SupportedVersion = '0.11.0';
 
 	tc.addAttribute('TransformPathsWithSpaces');
@@ -14,8 +14,8 @@ function tc = zig_tc
 	% ------------------------------
 	% Macros
 	% ------------------------------
-	tc.addMacro('MW_EXTERNLIB_DIR',     ['$(MATLAB_ROOT)\extern\lib\' tc.Platform '\microsoft']);
-	tc.addMacro('MW_LIB_DIR',           ['$(MATLAB_ROOT)\lib\' tc.Platform]);
+	tc.addMacro('MW_EXTERNLIB_DIR',     ['$(MATLAB_ROOT)/extern/lib/' tc.Platform '/linux']);
+	tc.addMacro('MW_LIB_DIR',           ['$(MATLAB_ROOT)/lib/' tc.Platform]);
 	tc.addMacro('CFLAGS_ADDITIONAL',    '-D_CRT_SECURE_NO_WARNINGS');
 	tc.addMacro('CPPFLAGS_ADDITIONAL',  '-EHs -D_CRT_SECURE_NO_WARNINGS');
 	tc.addMacro('LIBS_TOOLCHAIN',       '$(conlibs)');
@@ -80,8 +80,8 @@ function tc = zig_tc
 	tool.setDirective(      'OutputFlag',           '-out:');
 	tool.setDirective(      'Debug',                '');
 	
-	tool.setFileExtension(  'Executable',           '.exe');
-	tool.setFileExtension(  'Shared Library',       '.dll');
+	tool.setFileExtension(  'Executable',           '');
+	tool.setFileExtension(  'Shared Library',       '.so');
 	
 	tool.setCommandPattern('|>TOOL<| |>TOOL_OPTIONS<| |>OUTPUT_FLAG<||>OUTPUT<|');
 	
@@ -100,8 +100,8 @@ function tc = zig_tc
 	tool.setDirective(      'OutputFlag',           '-out:');
 	tool.setDirective(      'Debug',                '');
 	
-	tool.setFileExtension(  'Executable',           '.exe');
-	tool.setFileExtension(  'Shared Library',       '.dll');
+	tool.setFileExtension(  'Executable',           '');
+	tool.setFileExtension(  'Shared Library',       '.so');
 	
 	tool.setCommandPattern('|>TOOL<| |>TOOL_OPTIONS<| |>OUTPUT_FLAG<||>OUTPUT<|');
 	
@@ -115,7 +115,7 @@ function tc = zig_tc
 	tool.setCommand(        'zig ar');
 	tool.setPath(           '');
 	tool.setDirective(      'OutputFlag',           '-out:');
-	tool.setFileExtension(  'Static Library',       '.lib');
+	tool.setFileExtension(  'Static Library',       '.a');
 	tool.setCommandPattern('|>TOOL<| |>TOOL_OPTIONS<| |>OUTPUT_FLAG<||>OUTPUT<|');
 	
 	% ------------------------------
@@ -128,8 +128,6 @@ function tc = zig_tc
 	% BUILD CONFIGURATIONS
 	% --------------------------------------------
 	
-	optimsOffOpts    = {'/c /Od'};
-	optimsOnOpts     = {'/c /O2'};
 	cCompilerOpts    = '$(cflags) $(CVARSFLAG) $(CFLAGS_ADDITIONAL)';
 	cppCompilerOpts  = '$(cflags) $(CVARSFLAG) $(CPPFLAGS_ADDITIONAL)';
 	linkerOpts       = {'$(ldebug) $(conflags) $(LIBS_TOOLCHAIN)'};
@@ -146,8 +144,8 @@ function tc = zig_tc
 	% Set the toolchain flags for 'Faster Builds' build configuration
 	
 	cfg = tc.getBuildConfiguration('Faster Builds');
-	cfg.setOption( 'C Compiler',                horzcat(cCompilerOpts,   optimsOffOpts));
-	cfg.setOption( 'C++ Compiler',              horzcat(cppCompilerOpts, optimsOffOpts));
+	cfg.setOption( 'C Compiler',                horzcat(cCompilerOpts));
+	cfg.setOption( 'C++ Compiler',              horzcat(cppCompilerOpts));
 	cfg.setOption( 'Linker',                    linkerOpts);
 	cfg.setOption( 'C++ Linker',                linkerOpts);
 	cfg.setOption( 'Shared Library Linker',     sharedLinkerOpts);
@@ -156,8 +154,8 @@ function tc = zig_tc
 	% Set the toolchain flags for 'Faster Runs' build configuration
 	
 	cfg = tc.getBuildConfiguration('Faster Runs');
-	cfg.setOption( 'C Compiler',                horzcat(cCompilerOpts,   optimsOnOpts));
-	cfg.setOption( 'C++ Compiler',              horzcat(cppCompilerOpts, optimsOnOpts));
+	cfg.setOption( 'C Compiler',                horzcat(cCompilerOpts));
+	cfg.setOption( 'C++ Compiler',              horzcat(cppCompilerOpts));
 	cfg.setOption( 'Linker',                    linkerOpts);
 	cfg.setOption( 'C++ Linker',                linkerOpts);
 	cfg.setOption( 'Shared Library Linker',     sharedLinkerOpts);
@@ -166,8 +164,8 @@ function tc = zig_tc
 	% Set the toolchain flags for 'Debug' build configuration
 	
 	cfg = tc.getBuildConfiguration('Debug');
-	cfg.setOption( 'C Compiler',              	horzcat(cCompilerOpts,   optimsOffOpts, debugFlag.CCompiler));
-	cfg.setOption( 'C++ Compiler',          	horzcat(cppCompilerOpts, optimsOffOpts, debugFlag.CppCompiler));
+	cfg.setOption( 'C Compiler',              	horzcat(cCompilerOpts, debugFlag.CCompiler));
+	cfg.setOption( 'C++ Compiler',          	horzcat(cppCompilerOpts, debugFlag.CppCompiler));
 	cfg.setOption( 'Linker',                	horzcat(linkerOpts,       debugFlag.Linker));
 	cfg.setOption( 'C++ Linker',               	horzcat(linkerOpts,       debugFlag.CppLinker));
 	cfg.setOption( 'Shared Library Linker',  	horzcat(sharedLinkerOpts, debugFlag.Linker));
